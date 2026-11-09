@@ -9,6 +9,7 @@ from parser import build_dependency_graph
 from conformance import check_architecture_conformance
 from git_miner import trace_violation_history
 from evidence_engine import apply_evidence_guided_gate
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Architecture Conformance Engine (WSL)")
 
@@ -65,3 +66,12 @@ def analyze_repository(req: AnalyzeRequest):
         print(f"ERROR: {error_trace}")
         shutil.rmtree(temp_dir, ignore_errors=True)
         raise HTTPException(status_code=500, detail=str(e))
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins for local testing
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
