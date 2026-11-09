@@ -9,6 +9,9 @@ def check_architecture_conformance(graph, forbidden_rules):
         target_module = rule.get("target")
         
         for node in graph.nodes():
+            source_prefix = rule.get("pattern", "") if isinstance(rule, dict) else getattr(rule, "pattern", "")
+            if source_prefix and not node.startswith(source_prefix):
+                continue
             if node.startswith(source_prefix):
                 if graph.has_edge(node, target_module):
                     violations.append({
